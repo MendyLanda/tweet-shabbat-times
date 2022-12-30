@@ -58,7 +58,7 @@ def fill_tweet_placeholder(tweet_content: str, *values: str):
 
 
 # ZmanimAPI Sectoin added as an extra to this file
-from zmanim_api import *
+from zmanim_api import ZmanimAPI, Cities, date
 
 
 def get_loc_with_zmanim() -> list[dict]:
