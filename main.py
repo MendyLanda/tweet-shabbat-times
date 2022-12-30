@@ -1,5 +1,5 @@
 import yaml
-import datetime
+from datetime import datetime
 import time
 import pytz
 import tweepy
@@ -8,8 +8,7 @@ import tweepy
 from astral.sun import sun
 from astral.geocoder import database, lookup
 
-from tweet_parameters import placeholders
-from locations import cities
+# from tweet_parameters import placeholders
 
 
 def get_next_sunrise(city: str):
@@ -22,18 +21,16 @@ def get_next_sunrise(city: str):
             f"City '{city}' not found in the database. For a list of valid cities, see https://sffjunkie.github.io/astral/#cities"
         )
     # get the next sunrise time for the specified city
-    return sun(city.observer, date=datetime.date.today(), tzinfo=pytz.utc).get(
-        "sunrise"
-    )
+    return sun(city.observer, date=date.today(), tzinfo=pytz.utc).get("sunrise")
 
 
 def tweet(api, tweet_content):
     # tweet the message
     api.update_status(tweet_content)
-    print(f"Tweeted: {tweet_content} at {datetime.datetime.now()}")
+    print(f"Tweeted: {tweet_content} at {datetime.now()}")
 
 
-def convert_utc_to_local(utc_datetime: datetime.datetime):
+def convert_utc_to_local(utc_datetime: datetime):
     """Converts a UTC datetime object to a system local datetime object."""
     return utc_datetime.astimezone(pytz.timezone(time.tzname[0]))
 
@@ -45,7 +42,7 @@ def is_sunrise(city: str):
     # get the local time for the next sunrise time for the specified city
     l_sun = convert_utc_to_local(sun)
 
-    l_time = datetime.datetime.now()
+    l_time = datetime.now()
     return l_sun.hour == l_time.hour and l_sun.minute == l_time.minute
 
 
@@ -73,8 +70,10 @@ def get_loc_with_zmanim() -> list[dict]:
     ]
 
     for location in locations:
-        zmanim = ZmanimAPI.get_zmanim(date=datetime.date.today(), city=location["city"])
+        zmanim = ZmanimAPI.get_zmanim(date=date.today(), city=location["city"])
         location["zmanim"] = zmanim[0].get_important_zmanim()
+
+    return locations
 
 
 def format_zmanim_for_tweet(zmanim: list[dict]) -> str:
